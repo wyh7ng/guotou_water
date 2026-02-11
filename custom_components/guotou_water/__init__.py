@@ -16,6 +16,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.components.frontend import add_extra_js_url
+from homeassistant.components.http import StaticPathConfig
 
 from .const import (
     DOMAIN,
@@ -45,7 +46,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if not hass.data.get(CARD_REGISTERED_KEY):
         card_path = pathlib.Path(__file__).parent / "www" / "water-info-card.js"
         if card_path.exists():
-            hass.http.register_static_path(CARD_URL, str(card_path), cache_headers=True)
+            await hass.http.async_register_static_paths([
+                StaticPathConfig(CARD_URL, str(card_path), True)
+            ])
             add_extra_js_url(hass, CARD_URL)
             hass.data[CARD_REGISTERED_KEY] = True
             _LOGGER.info("水务信息卡片已自动注册: %s", CARD_URL)
