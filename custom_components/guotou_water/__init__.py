@@ -38,6 +38,12 @@ CARD_URL = "/guotou_water/water-info-card.js"
 CARD_REGISTERED_KEY = f"{DOMAIN}_card_registered"
 
 
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    """Set up the Guotou Water component."""
+    hass.data.setdefault(DOMAIN, {})
+    return True
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up SQZLS Water from a config entry."""
     hass.data.setdefault(DOMAIN, {})
